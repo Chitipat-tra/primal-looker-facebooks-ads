@@ -29,6 +29,19 @@ view: facebook_ads__ad_set_report {
   dimension: ad_set_name {
     type: string
     sql: ${TABLE}.ad_set_name ;;
+    full_suggestions: yes
+
+    link: {
+      label: "🎯 View Ad Set Performance"
+      icon_url: "http://www.looker.com/favicon.ico"
+      url: "/explore/facebook_ads_report/facebook_ads__ad_set_report?fields=facebook_ads__ad_set_report.ad_set_name,facebook_ads__ad_set_report.total_spend,facebook_ads__ad_set_report.total_impressions,facebook_ads__ad_set_report.cpm,facebook_ads__ad_set_report.ctr,facebook_ads__ad_set_report.total_conversions,facebook_ads__ad_set_report.roas&f[facebook_ads__ad_set_report.ad_set_name]={{ value | encode_uri }}"
+    }
+
+    link: {
+      label: "📱 Open in Facebook Ads Manager"
+      icon_url: "https://www.facebook.com/favicon.ico"
+      url: "https://business.facebook.com/adsmanager/manage/adsets?act={{ account_id._value }}"
+    }
   }
 
   dimension: bid_strategy {
@@ -194,5 +207,57 @@ view: facebook_ads__ad_set_report {
     type: number
     sql: SAFE_DIVIDE(${total_conversions}, ${total_clicks}) ;;
     value_format_name: percent_2
+  }
+
+  # Performance Categories
+  dimension: performance_category {
+    type: string
+    description: "Performance category based on ROAS"
+    sql: CASE
+      WHEN SAFE_DIVIDE(${conversions_value}, NULLIF(${spend}, 0)) >= 3
+        THEN '🟢 High Performance (ROAS 3+)'
+      WHEN SAFE_DIVIDE(${conversions_value}, NULLIF(${spend}, 0)) >= 1.5
+        THEN '🟡 Good Performance (ROAS 1.5-3)'
+      WHEN SAFE_DIVIDE(${conversions_value}, NULLIF(${spend}, 0)) >= 1
+        THEN '🟠 Break Even (ROAS 1-1.5)'
+      WHEN SAFE_DIVIDE(${conversions_value}, NULLIF(${spend}, 0)) > 0
+        THEN '🔴 Low Performance (ROAS <1)'
+      ELSE '⚪ No ROAS Data'
+    END ;;
+  }
+
+  dimension: roas_tier {
+    type: tier
+    description: "ROAS bucketed into tiers"
+    tiers: [0, 0.5, 1, 1.5, 2, 3, 5]
+    sql: SAFE_DIVIDE(${conversions_value}, NULLIF(${spend}, 0)) ;;
+    style: interval
+  }
+
+  dimension: spend_tier {
+    type: tier
+    description: "Spend bucketed into tiers"
+    tiers: [0, 100, 500, 1000, 5000, 10000, 50000]
+    sql: ${spend} ;;
+    style: interval
+    value_format_name: usd_0
+  }
+
+  # Drill Fields
+  set: adset_detail {
+    fields: [
+      ad_set_name,
+      campaign_name,
+      bid_strategy,
+      optimization_goal,
+      total_spend,
+      total_impressions,
+      cpm,
+      total_clicks,
+      ctr,
+      total_conversions,
+      cost_per_conversion,
+      roas
+    ]
   }
 }

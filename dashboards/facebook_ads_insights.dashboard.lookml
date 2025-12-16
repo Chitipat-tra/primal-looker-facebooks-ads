@@ -4,6 +4,13 @@
   preferred_viewer: dashboards-next
   description: "Comprehensive overview of Facebook Ads performance metrics"
 
+  embed_style:
+    background_color: "#f8f9fa"
+    show_title: true
+    title_color: "#1877f2"
+    show_filters_bar: true
+    tile_text_color: "#1c1e21"
+
   elements:
   # Filters
   - name: date_filter
@@ -35,8 +42,11 @@
     conditional_formatting_include_totals: false
     conditional_formatting_include_nulls: false
     value_format: "$#,##0"
+    custom_color: "#1877f2"
     listen:
       Date: facebook_ads__ad_report.date_day_date
+      Campaign Benchmark: facebook_ads__ad_report.selected_campaigns
+      Performance Category: facebook_ads__ad_report.performance_category
     row: 0
     col: 0
     width: 4
@@ -62,8 +72,11 @@
     conditional_formatting_include_totals: false
     conditional_formatting_include_nulls: false
     value_format: "#,##0.0,,\"M\""
+    custom_color: "#1877f2"
     listen:
       Date: facebook_ads__ad_report.date_day_date
+      Campaign Benchmark: facebook_ads__ad_report.selected_campaigns
+      Performance Category: facebook_ads__ad_report.performance_category
     row: 0
     col: 4
     width: 4
@@ -376,10 +389,10 @@
     model: facebook_ads_report
     explore: facebook_ads__campaign_report
     type: looker_grid
-    fields: [facebook_ads__campaign_report.campaign_name, facebook_ads__campaign_report.total_spend,
-      facebook_ads__campaign_report.total_impressions, facebook_ads__campaign_report.cpm,
-      facebook_ads__campaign_report.total_clicks, facebook_ads__campaign_report.cpc,
-      facebook_ads__campaign_report.ctr, facebook_ads__campaign_report.total_conversions,
+    fields: [facebook_ads__campaign_report.campaign_name, facebook_ads__campaign_report.performance_category,
+      facebook_ads__campaign_report.total_spend, facebook_ads__campaign_report.total_impressions,
+      facebook_ads__campaign_report.cpm, facebook_ads__campaign_report.total_clicks,
+      facebook_ads__campaign_report.cpc, facebook_ads__campaign_report.ctr, facebook_ads__campaign_report.total_conversions,
       facebook_ads__campaign_report.cost_per_conversion, facebook_ads__campaign_report.total_conversions_value,
       facebook_ads__campaign_report.roas]
     filters:
@@ -432,9 +445,10 @@
     explore: facebook_ads__ad_set_report
     type: looker_grid
     fields: [facebook_ads__ad_set_report.ad_set_name, facebook_ads__ad_set_report.campaign_name,
-      facebook_ads__ad_set_report.total_spend, facebook_ads__ad_set_report.total_impressions,
-      facebook_ads__ad_set_report.cpm, facebook_ads__ad_set_report.total_clicks,
-      facebook_ads__ad_set_report.cpc, facebook_ads__ad_set_report.ctr, facebook_ads__ad_set_report.total_conversions,
+      facebook_ads__ad_set_report.performance_category, facebook_ads__ad_set_report.total_spend,
+      facebook_ads__ad_set_report.total_impressions, facebook_ads__ad_set_report.cpm,
+      facebook_ads__ad_set_report.total_clicks, facebook_ads__ad_set_report.cpc,
+      facebook_ads__ad_set_report.ctr, facebook_ads__ad_set_report.total_conversions,
       facebook_ads__ad_set_report.cost_per_conversion, facebook_ads__ad_set_report.total_conversions_value,
       facebook_ads__ad_set_report.roas]
     filters:
@@ -484,9 +498,10 @@
     explore: facebook_ads__ad_report
     type: looker_grid
     fields: [facebook_ads__ad_report.ad_name, facebook_ads__ad_report.ad_set_name,
-      facebook_ads__ad_report.campaign_name, facebook_ads__ad_report.total_spend,
-      facebook_ads__ad_report.total_impressions, facebook_ads__ad_report.cpm, facebook_ads__ad_report.total_clicks,
-      facebook_ads__ad_report.cpc, facebook_ads__ad_report.ctr, facebook_ads__ad_report.total_conversions,
+      facebook_ads__ad_report.campaign_name, facebook_ads__ad_report.performance_category,
+      facebook_ads__ad_report.total_spend, facebook_ads__ad_report.total_impressions,
+      facebook_ads__ad_report.cpm, facebook_ads__ad_report.total_clicks, facebook_ads__ad_report.cpc,
+      facebook_ads__ad_report.ctr, facebook_ads__ad_report.total_conversions,
       facebook_ads__ad_report.cost_per_conversion, facebook_ads__ad_report.total_conversions_value,
       facebook_ads__ad_report.roas]
     filters:
@@ -537,10 +552,38 @@
     allow_multiple_values: true
     required: false
     ui_config:
-      type: advanced
-      display: popover
+      type: relative_timeframes
+      display: inline
       options: []
     model: facebook_ads_report
     explore: facebook_ads__ad_report
     listens_to_filters: []
     field: facebook_ads__ad_report.date_day_date
+
+  - name: Campaign Benchmark
+    title: Campaign Benchmark
+    type: field_filter
+    default_value: ""
+    allow_multiple_values: true
+    required: false
+    ui_config:
+      type: checkboxes
+      display: popover
+    model: facebook_ads_report
+    explore: facebook_ads__ad_report
+    listens_to_filters: []
+    field: facebook_ads__ad_report.selected_campaigns
+
+  - name: Performance Category
+    title: Performance Category
+    type: field_filter
+    default_value: ""
+    allow_multiple_values: true
+    required: false
+    ui_config:
+      type: checkboxes
+      display: popover
+    model: facebook_ads_report
+    explore: facebook_ads__ad_report
+    listens_to_filters: []
+    field: facebook_ads__ad_report.performance_category

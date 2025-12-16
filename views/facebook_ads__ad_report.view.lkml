@@ -29,6 +29,31 @@ view: facebook_ads__ad_report {
   dimension: ad_name {
     type: string
     sql: ${TABLE}.ad_name ;;
+    full_suggestions: yes
+
+    link: {
+      label: "🎬 View Ad Performance"
+      icon_url: "http://www.looker.com/favicon.ico"
+      url: "/explore/facebook_ads_report/facebook_ads__ad_report?fields=facebook_ads__ad_report.ad_name,facebook_ads__ad_report.total_spend,facebook_ads__ad_report.total_impressions,facebook_ads__ad_report.cpm,facebook_ads__ad_report.ctr,facebook_ads__ad_report.total_conversions,facebook_ads__ad_report.roas&f[facebook_ads__ad_report.ad_name]={{ value | encode_uri }}"
+    }
+
+    link: {
+      label: "📱 Open in Facebook Ads Manager"
+      icon_url: "https://www.facebook.com/favicon.ico"
+      url: "https://business.facebook.com/adsmanager/manage/ads?act={{ account_id._value }}"
+    }
+
+    link: {
+      label: "✏️ Edit Ad Creative"
+      icon_url: "https://www.facebook.com/favicon.ico"
+      url: "https://business.facebook.com/adsmanager/manage/ads?act={{ account_id._value }}"
+    }
+
+    link: {
+      label: "📊 View Ad Preview"
+      icon_url: "https://www.facebook.com/favicon.ico"
+      url: "https://business.facebook.com/adsmanager/manage/ads?act={{ account_id._value }}"
+    }
   }
 
   dimension: ad_set_id {
@@ -39,6 +64,25 @@ view: facebook_ads__ad_report {
   dimension: ad_set_name {
     type: string
     sql: ${TABLE}.ad_set_name ;;
+    full_suggestions: yes
+
+    link: {
+      label: "🎯 View Ad Set Performance"
+      icon_url: "http://www.looker.com/favicon.ico"
+      url: "/explore/facebook_ads_report/facebook_ads__ad_set_report?fields=facebook_ads__ad_set_report.ad_set_name,facebook_ads__ad_set_report.total_spend,facebook_ads__ad_set_report.total_impressions,facebook_ads__ad_set_report.cpm,facebook_ads__ad_set_report.ctr,facebook_ads__ad_set_report.total_conversions,facebook_ads__ad_set_report.roas&f[facebook_ads__ad_set_report.ad_set_name]={{ value | encode_uri }}"
+    }
+
+    link: {
+      label: "📱 Open in Facebook Ads Manager"
+      icon_url: "https://www.facebook.com/favicon.ico"
+      url: "https://business.facebook.com/adsmanager/manage/adsets?act={{ account_id._value }}"
+    }
+
+    link: {
+      label: "👥 Edit Targeting"
+      icon_url: "https://www.facebook.com/favicon.ico"
+      url: "https://business.facebook.com/adsmanager/manage/adsets?act={{ account_id._value }}"
+    }
   }
 
   dimension: campaign_id {
@@ -49,6 +93,25 @@ view: facebook_ads__ad_report {
   dimension: campaign_name {
     type: string
     sql: ${TABLE}.campaign_name ;;
+    full_suggestions: yes
+
+    link: {
+      label: "📊 View Campaign Performance"
+      icon_url: "http://www.looker.com/favicon.ico"
+      url: "/dashboards/facebook_campaign_detail?Campaign+Name={{ value | encode_uri }}"
+    }
+
+    link: {
+      label: "📱 Open in Facebook Ads Manager"
+      icon_url: "https://www.facebook.com/favicon.ico"
+      url: "https://business.facebook.com/adsmanager/manage/campaigns?act={{ account_id._value }}"
+    }
+
+    link: {
+      label: "📥 Export Campaign Data"
+      icon_url: "http://www.looker.com/favicon.ico"
+      url: "/explore/facebook_ads_report/facebook_ads__campaign_report?fields=facebook_ads__campaign_report.campaign_name,facebook_ads__campaign_report.total_spend,facebook_ads__campaign_report.total_impressions,facebook_ads__campaign_report.cpm,facebook_ads__campaign_report.ctr,facebook_ads__campaign_report.total_conversions,facebook_ads__campaign_report.roas&f[facebook_ads__campaign_report.campaign_name]={{ value | encode_uri }}"
+    }
   }
 
   dimension: clicks {
@@ -177,5 +240,146 @@ view: facebook_ads__ad_report {
     type: number
     sql: SAFE_DIVIDE(${total_conversions}, ${total_clicks}) ;;
     value_format_name: percent_2
+  }
+
+  # Performance Categories & Tiers
+  dimension: performance_category {
+    type: string
+    description: "Performance category based on ROAS"
+    sql: CASE
+      WHEN SAFE_DIVIDE(${conversions_value}, NULLIF(${spend}, 0)) >= 3
+        THEN '🟢 High Performance (ROAS 3+)'
+      WHEN SAFE_DIVIDE(${conversions_value}, NULLIF(${spend}, 0)) >= 1.5
+        THEN '🟡 Good Performance (ROAS 1.5-3)'
+      WHEN SAFE_DIVIDE(${conversions_value}, NULLIF(${spend}, 0)) >= 1
+        THEN '🟠 Break Even (ROAS 1-1.5)'
+      WHEN SAFE_DIVIDE(${conversions_value}, NULLIF(${spend}, 0)) > 0
+        THEN '🔴 Low Performance (ROAS <1)'
+      ELSE '⚪ No ROAS Data'
+    END ;;
+  }
+
+  dimension: roas_tier {
+    type: tier
+    description: "ROAS bucketed into tiers"
+    tiers: [0, 0.5, 1, 1.5, 2, 3, 5]
+    sql: SAFE_DIVIDE(${conversions_value}, NULLIF(${spend}, 0)) ;;
+    style: interval
+  }
+
+  dimension: spend_tier {
+    type: tier
+    description: "Spend bucketed into tiers"
+    tiers: [0, 100, 500, 1000, 5000, 10000, 50000]
+    sql: ${spend} ;;
+    style: interval
+    value_format_name: usd_0
+  }
+
+  dimension: ctr_tier {
+    type: tier
+    description: "CTR bucketed into tiers"
+    tiers: [0, 0.005, 0.01, 0.015, 0.02, 0.03]
+    sql: SAFE_DIVIDE(${clicks}, NULLIF(${impressions}, 0)) ;;
+    style: interval
+    value_format_name: percent_2
+  }
+
+  # Drill Fields
+  set: campaign_detail {
+    fields: [
+      campaign_name,
+      total_spend,
+      total_impressions,
+      cpm,
+      total_clicks,
+      ctr,
+      total_conversions,
+      cost_per_conversion,
+      total_conversions_value,
+      roas
+    ]
+  }
+
+  set: adset_detail {
+    fields: [
+      ad_set_name,
+      campaign_name,
+      total_spend,
+      total_impressions,
+      cpm,
+      total_clicks,
+      ctr,
+      total_conversions,
+      cost_per_conversion,
+      roas
+    ]
+  }
+
+  set: ad_detail {
+    fields: [
+      ad_name,
+      ad_set_name,
+      campaign_name,
+      date_day_date,
+      total_spend,
+      total_impressions,
+      cpm,
+      total_clicks,
+      ctr,
+      cpc,
+      total_conversions,
+      cost_per_conversion,
+      roas
+    ]
+  }
+
+  # Benchmark Filters
+  filter: selected_campaigns {
+    type: string
+    description: "Select campaigns to compare against others"
+    suggest_dimension: campaign_name
+  }
+
+  dimension: campaign_comparison_group {
+    type: string
+    description: "Groups campaigns into selected vs. others for benchmarking"
+    sql: CASE
+      WHEN {% condition selected_campaigns %} ${campaign_name} {% endcondition %}
+      THEN ${campaign_name}
+      ELSE 'Other Campaigns'
+    END ;;
+  }
+
+  filter: selected_adsets {
+    type: string
+    description: "Select ad sets to compare against others"
+    suggest_dimension: ad_set_name
+  }
+
+  dimension: adset_comparison_group {
+    type: string
+    description: "Groups ad sets into selected vs. others for benchmarking"
+    sql: CASE
+      WHEN {% condition selected_adsets %} ${ad_set_name} {% endcondition %}
+      THEN ${ad_set_name}
+      ELSE 'Other Ad Sets'
+    END ;;
+  }
+
+  filter: selected_ads {
+    type: string
+    description: "Select ads to compare against others"
+    suggest_dimension: ad_name
+  }
+
+  dimension: ad_comparison_group {
+    type: string
+    description: "Groups ads into selected vs. others for benchmarking"
+    sql: CASE
+      WHEN {% condition selected_ads %} ${ad_name} {% endcondition %}
+      THEN ${ad_name}
+      ELSE 'Other Ads'
+    END ;;
   }
 }
