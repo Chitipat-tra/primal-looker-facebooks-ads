@@ -39,7 +39,7 @@ view: facebook_ads__campaign_report {
     link: {
       label: "📊 View Campaign Performance"
       icon_url: "http://www.looker.com/favicon.ico"
-      url: "/dashboards/facebook_campaign_detail?Campaign+Name={{ value | encode_uri }}"
+      url: "/dashboards/facebook_ads_report::facebook_campaign_detail?Campaign+Name={{ value | encode_uri }}"
     }
 
     link: {
