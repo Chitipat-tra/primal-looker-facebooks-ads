@@ -95,8 +95,87 @@ view: facebook_ads__ad_report {
     type: number
     sql: ${TABLE}.spend ;;
   }
+
+  # Measures
   measure: count {
     type: count
     drill_fields: [ad_name, campaign_name, account_name, ad_set_name]
+  }
+
+  measure: total_spend {
+    type: sum
+    sql: ${spend} ;;
+    value_format_name: usd_0
+  }
+
+  measure: total_impressions {
+    type: sum
+    sql: ${impressions} ;;
+    value_format_name: decimal_0
+  }
+
+  measure: total_clicks {
+    type: sum
+    sql: ${clicks} ;;
+    value_format_name: decimal_0
+  }
+
+  measure: total_conversions {
+    type: sum
+    sql: ${conversions} ;;
+    value_format_name: decimal_1
+  }
+
+  measure: total_conversions_value {
+    type: sum
+    sql: ${conversions_value} ;;
+    value_format_name: usd_0
+  }
+
+  # Calculated Measures
+  measure: cpm {
+    label: "CPM"
+    description: "Cost per thousand impressions"
+    type: number
+    sql: SAFE_DIVIDE(${total_spend}, ${total_impressions}) * 1000 ;;
+    value_format_name: decimal_1
+  }
+
+  measure: ctr {
+    label: "CTR"
+    description: "Click-through rate"
+    type: number
+    sql: SAFE_DIVIDE(${total_clicks}, ${total_impressions}) ;;
+    value_format_name: percent_2
+  }
+
+  measure: cpc {
+    label: "CPC"
+    description: "Cost per click"
+    type: number
+    sql: SAFE_DIVIDE(${total_spend}, ${total_clicks}) ;;
+    value_format_name: usd_2
+  }
+
+  measure: cost_per_conversion {
+    label: "Cost per Conversion"
+    type: number
+    sql: SAFE_DIVIDE(${total_spend}, ${total_conversions}) ;;
+    value_format_name: usd_2
+  }
+
+  measure: roas {
+    label: "ROAS"
+    description: "Return on ad spend"
+    type: number
+    sql: SAFE_DIVIDE(${total_conversions_value}, ${total_spend}) ;;
+    value_format_name: decimal_2
+  }
+
+  measure: conversion_rate {
+    label: "Conversion Rate"
+    type: number
+    sql: SAFE_DIVIDE(${total_conversions}, ${total_clicks}) ;;
+    value_format_name: percent_2
   }
 }
