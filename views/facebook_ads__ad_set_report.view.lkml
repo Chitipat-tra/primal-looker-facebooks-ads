@@ -55,7 +55,7 @@ view: facebook_ads__ad_set_report {
 
   dimension: budget_remaining {
     description: "Remaining budget for the ad set in Thai Baht"
-    value_format: "\฿ #,##0.00"
+    value_format: "\"฿\" #,##0.00"
     type: number
     sql: ${TABLE}.budget_remaining ;;
   }
@@ -85,14 +85,14 @@ view: facebook_ads__ad_set_report {
 
   dimension: conversions_value {
     description: "Total value of conversions in Thai Baht"
-    value_format: "\฿ #,##0.00"
+    value_format: "\"฿\" #,##0.00"
     type: number
     sql: ${TABLE}.conversions_value ;;
   }
 
   dimension: daily_budget {
     description: "Daily budget allocated for the ad set in Thai Baht"
-    value_format: "\฿ #,##0.00"
+    value_format: "\"฿\" #,##0.00"
     type: number
     sql: ${TABLE}.daily_budget ;;
   }
@@ -133,7 +133,7 @@ view: facebook_ads__ad_set_report {
 
   dimension: spend {
     description: "Amount spent on the ad set in Thai Baht"
-    value_format: "\฿ #,##0.00"
+    value_format: "\"฿\" #,##0.00"
     type: number
     sql: ${TABLE}.spend ;;
   }
@@ -155,7 +155,7 @@ view: facebook_ads__ad_set_report {
     description: "Total amount spent on ad sets in Thai Baht"
     type: sum
     sql: ${spend} ;;
-    value_format: "\฿ #,##0.00"
+    value_format: "\"฿\" #,##0.00"
   }
 
   measure: total_impressions {
@@ -183,7 +183,7 @@ view: facebook_ads__ad_set_report {
     description: "Total value of all conversions in Thai Baht"
     type: sum
     sql: ${conversions_value} ;;
-    value_format: "\฿ #,##0.00"
+    value_format: "\"฿\" #,##0.00"
   }
 
   # Calculated Measures
@@ -206,10 +206,9 @@ view: facebook_ads__ad_set_report {
   measure: cpc {
     label: "CPC"
     description: "Cost per click in Thai Baht - average amount paid for each click on ad set ads"
-    description: "Cost per click"
     type: number
     sql: SAFE_DIVIDE(${total_spend}, ${total_clicks}) ;;
-    value_format: "\฿ #,##0.00"
+    value_format: "\"฿\" #,##0.00"
   }
 
   measure: cost_per_conversion {
@@ -217,7 +216,7 @@ view: facebook_ads__ad_set_report {
     description: "Average cost to acquire one conversion in Thai Baht for ad sets"
     type: number
     sql: SAFE_DIVIDE(${total_spend}, ${total_conversions}) ;;
-    value_format: "\฿ #,##0.00"
+    value_format: "\"฿\" #,##0.00"
   }
 
   measure: roas {
@@ -267,7 +266,7 @@ view: facebook_ads__ad_set_report {
     tiers: [0, 100, 500, 1000, 5000, 10000, 50000]
     sql: ${spend} ;;
     style: interval
-    value_format: "\฿ #,##0.00"
+    value_format: "\"฿\" #,##0.00"
   }
 
   # Drill Fields

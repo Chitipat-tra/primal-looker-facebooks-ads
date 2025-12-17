@@ -34,7 +34,7 @@
     conditional_formatting_include_nulls: false
     custom_color: "#1877f2"
     single_value_title: "Total Spend"
-    value_format: "\฿ #,##0.00"
+    value_format: "\"฿\" #,##0.00"
     listen:
       Campaign Name: facebook_ads__campaign_report.campaign_name
       Date Range: facebook_ads__campaign_report.date_day_date
@@ -142,7 +142,7 @@
     comparison_label: "Cost per Conversion"
     enable_conditional_formatting: false
     custom_color: "#1877f2"
-    value_format: "\฿ #,##0.00"
+    value_format: "\"฿\" #,##0.00"
     listen:
       Campaign Name: facebook_ads__campaign_report.campaign_name
       Date Range: facebook_ads__campaign_report.date_day_date

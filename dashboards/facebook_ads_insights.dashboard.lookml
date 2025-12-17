@@ -41,7 +41,7 @@
     enable_conditional_formatting: false
     conditional_formatting_include_totals: false
     conditional_formatting_include_nulls: false
-    value_format: "\฿ #,##0.00"
+    value_format: "\"฿\" #,##0.00"
     custom_color: "#1877f2"
     listen:
       Date: facebook_ads__ad_report.date_day_date
@@ -155,7 +155,7 @@
     enable_conditional_formatting: false
     conditional_formatting_include_totals: false
     conditional_formatting_include_nulls: false
-    value_format: "\฿ #,##0.00"
+    value_format: "\"฿\" #,##0.00"
     listen:
       Date: facebook_ads__ad_report.date_day_date
     row: 0
@@ -237,7 +237,7 @@
     enable_conditional_formatting: false
     conditional_formatting_include_totals: false
     conditional_formatting_include_nulls: false
-    value_format: "\฿ #,##0.00"
+    value_format: "\"฿\" #,##0.00"
     listen:
       Date: facebook_ads__ad_report.date_day_date
     row: 3
@@ -264,7 +264,7 @@
     enable_conditional_formatting: false
     conditional_formatting_include_totals: false
     conditional_formatting_include_nulls: false
-    value_format: "\฿ #,##0.00,\"K\""
+    value_format: "\"฿\" #,##0.00,\"K\""
     listen:
       Date: facebook_ads__ad_report.date_day_date
     row: 3

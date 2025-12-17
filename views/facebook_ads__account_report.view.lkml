@@ -49,7 +49,7 @@ view: facebook_ads__account_report {
 
   dimension: conversions_value {
     description: "Total value of conversions in Thai Baht"
-    value_format: "\฿ #,##0.00"
+    value_format: "\"฿\" #,##0.00"
     type: number
     sql: ${TABLE}.conversions_value ;;
   }
@@ -90,7 +90,7 @@ view: facebook_ads__account_report {
 
   dimension: spend {
     description: "Amount spent on account ads in Thai Baht"
-    value_format: "\฿ #,##0.00"
+    value_format: "\"฿\" #,##0.00"
     type: number
     sql: ${TABLE}.spend ;;
   }
@@ -112,7 +112,7 @@ view: facebook_ads__account_report {
     description: "Total amount spent across all account ads in Thai Baht"
     type: sum
     sql: ${spend} ;;
-    value_format: "\฿ #,##0.00"
+    value_format: "\"฿\" #,##0.00"
   }
 
   measure: total_impressions {
@@ -140,7 +140,7 @@ view: facebook_ads__account_report {
     description: "Total value of all conversions in Thai Baht"
     type: sum
     sql: ${conversions_value} ;;
-    value_format: "\฿ #,##0.00"
+    value_format: "\"฿\" #,##0.00"
   }
 
   # Calculated Measures
@@ -165,14 +165,14 @@ view: facebook_ads__account_report {
     description: "Cost per click"
     type: number
     sql: SAFE_DIVIDE(${total_spend}, ${total_clicks}) ;;
-    value_format: "\฿ #,##0.00"
+    value_format: "\"฿\" #,##0.00"
   }
 
   measure: cost_per_conversion {
     label: "Cost per Conversion"
     type: number
     sql: SAFE_DIVIDE(${total_spend}, ${total_conversions}) ;;
-    value_format: "\฿ #,##0.00"
+    value_format: "\"฿\" #,##0.00"
   }
 
   measure: roas {
