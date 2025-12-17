@@ -144,7 +144,7 @@ view: facebook_ads__ad_report {
     type: number
     sql: ${TABLE}.conversions_value ;;
     description: "Total value of conversions in Thai Baht"
-    value_format: "\"฿\"#,##0.00"
+    value_format: "\฿ #,##0.00"
   }
   # Dates and timestamps can be represented in Looker using a dimension group of type: time.
   # Looker converts dates and timestamps to the specified timeframes within the dimension group.
@@ -174,7 +174,7 @@ view: facebook_ads__ad_report {
     type: number
     sql: ${TABLE}.spend ;;
     description: "Amount spent on the ad in Thai Baht"
-    value_format: "\"฿\"#,##0.00"
+    value_format: "\฿ #,##0.00"
   }
 
   # Measures
@@ -187,7 +187,7 @@ view: facebook_ads__ad_report {
   measure: total_spend {
     type: sum
     sql: ${spend} ;;
-    value_format: "\"฿\"#,##0.00"
+    value_format: "\฿ #,##0.00"
     description: "Total amount spent on ads in Thai Baht"
   }
 
@@ -215,7 +215,7 @@ view: facebook_ads__ad_report {
   measure: total_conversions_value {
     type: sum
     sql: ${conversions_value} ;;
-    value_format: "\"฿\"#,##0.00"
+    value_format: "\฿ #,##0.00"
     description: "Total value of all conversions in Thai Baht"
   }
 
@@ -225,7 +225,7 @@ view: facebook_ads__ad_report {
     description: "Cost per thousand impressions in Thai Baht (how much it costs to show ads to 1,000 people)"
     type: number
     sql: SAFE_DIVIDE(${total_spend}, ${total_impressions}) * 1000 ;;
-    value_format: "\"฿\"#,##0.00"
+    value_format: "\฿ #,##0.00"
   }
 
   measure: ctr {
@@ -241,7 +241,7 @@ view: facebook_ads__ad_report {
     description: "Cost per click in Thai Baht - average amount paid for each click"
     type: number
     sql: SAFE_DIVIDE(${total_spend}, ${total_clicks}) ;;
-    value_format: "\"฿\"#,##0.00"
+    value_format: "\฿ #,##0.00"
   }
 
   measure: cost_per_conversion {
@@ -249,7 +249,7 @@ view: facebook_ads__ad_report {
     description: "Average cost to acquire one conversion in Thai Baht"
     type: number
     sql: SAFE_DIVIDE(${total_spend}, ${total_conversions}) ;;
-    value_format: "\"฿\"#,##0.00"
+    value_format: "\฿ #,##0.00"
   }
 
   measure: roas {
@@ -299,7 +299,7 @@ view: facebook_ads__ad_report {
     tiers: [0, 100, 500, 1000, 5000, 10000, 50000]
     sql: ${spend} ;;
     style: interval
-    value_format: "\"฿\"#,##0.00"
+    value_format: "\฿ #,##0.00"
   }
 
   dimension: ctr_tier {
