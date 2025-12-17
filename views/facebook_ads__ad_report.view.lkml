@@ -14,21 +14,25 @@ view: facebook_ads__ad_report {
   dimension: account_id {
     type: number
     sql: ${TABLE}.account_id ;;
+    description: "Unique identifier for the Facebook Ads account"
   }
 
   dimension: account_name {
     type: string
     sql: ${TABLE}.account_name ;;
+    description: "Name of the Facebook Ads account"
   }
 
   dimension: ad_id {
     type: number
     sql: ${TABLE}.ad_id ;;
+    description: "Unique identifier for the ad"
   }
 
   dimension: ad_name {
     type: string
     sql: ${TABLE}.ad_name ;;
+    description: "Name of the individual ad creative"
     full_suggestions: yes
 
     link: {
@@ -59,11 +63,13 @@ view: facebook_ads__ad_report {
   dimension: ad_set_id {
     type: number
     sql: ${TABLE}.ad_set_id ;;
+    description: "Unique identifier for the ad set"
   }
 
   dimension: ad_set_name {
     type: string
     sql: ${TABLE}.ad_set_name ;;
+    description: "Name of the ad set containing this ad"
     full_suggestions: yes
 
     link: {
@@ -88,11 +94,13 @@ view: facebook_ads__ad_report {
   dimension: campaign_id {
     type: number
     sql: ${TABLE}.campaign_id ;;
+    description: "Unique identifier for the campaign"
   }
 
   dimension: campaign_name {
     type: string
     sql: ${TABLE}.campaign_name ;;
+    description: "Name of the campaign containing this ad"
     full_suggestions: yes
 
     link: {
@@ -117,21 +125,26 @@ view: facebook_ads__ad_report {
   dimension: clicks {
     type: number
     sql: ${TABLE}.clicks ;;
+    description: "Number of clicks on the ad"
   }
 
   dimension: conversion_domain {
     type: string
     sql: ${TABLE}.conversion_domain ;;
+    description: "Domain where the conversion occurred"
   }
 
   dimension: conversions {
     type: number
     sql: ${TABLE}.conversions ;;
+    description: "Number of conversions attributed to the ad"
   }
 
   dimension: conversions_value {
     type: number
     sql: ${TABLE}.conversions_value ;;
+    description: "Total value of conversions in Thai Baht"
+    value_format: "฿#,##0.00"
   }
   # Dates and timestamps can be represented in Looker using a dimension group of type: time.
   # Looker converts dates and timestamps to the specified timeframes within the dimension group.
@@ -142,71 +155,82 @@ view: facebook_ads__ad_report {
     convert_tz: no
     datatype: date
     sql: ${TABLE}.date_day ;;
+    description: "Date when the ad metrics were recorded"
   }
 
   dimension: impressions {
     type: number
     sql: ${TABLE}.impressions ;;
+    description: "Number of times the ad was displayed"
   }
 
   dimension: source_relation {
     type: string
     sql: ${TABLE}.source_relation ;;
+    description: "Source of the data (for data lineage tracking)"
   }
 
   dimension: spend {
     type: number
     sql: ${TABLE}.spend ;;
+    description: "Amount spent on the ad in Thai Baht"
+    value_format: "฿#,##0.00"
   }
 
   # Measures
   measure: count {
     type: count
     drill_fields: [ad_name, campaign_name, account_name, ad_set_name]
+    description: "Count of unique ad records"
   }
 
   measure: total_spend {
     type: sum
     sql: ${spend} ;;
-    value_format_name: usd_0
+    value_format: "฿#,##0.00"
+    description: "Total amount spent on ads in Thai Baht"
   }
 
   measure: total_impressions {
     type: sum
     sql: ${impressions} ;;
-    value_format_name: decimal_0
+    value_format: "#,##0.00"
+    description: "Total number of times ads were displayed"
   }
 
   measure: total_clicks {
     type: sum
     sql: ${clicks} ;;
-    value_format_name: decimal_0
+    value_format: "#,##0.00"
+    description: "Total number of clicks on ads"
   }
 
   measure: total_conversions {
     type: sum
     sql: ${conversions} ;;
-    value_format_name: decimal_1
+    value_format: "#,##0.00"
+    description: "Total number of conversions from ads"
   }
 
   measure: total_conversions_value {
     type: sum
     sql: ${conversions_value} ;;
-    value_format_name: usd_0
+    value_format: "฿#,##0.00"
+    description: "Total value of all conversions in Thai Baht"
   }
 
   # Calculated Measures
   measure: cpm {
     label: "CPM"
-    description: "Cost per thousand impressions"
+    description: "Cost per thousand impressions in Thai Baht (how much it costs to show ads to 1,000 people)"
     type: number
     sql: SAFE_DIVIDE(${total_spend}, ${total_impressions}) * 1000 ;;
-    value_format_name: decimal_1
+    value_format: "฿#,##0.00"
   }
 
   measure: ctr {
     label: "CTR"
-    description: "Click-through rate"
+    description: "Click-through rate - percentage of people who clicked after seeing the ad"
     type: number
     sql: SAFE_DIVIDE(${total_clicks}, ${total_impressions}) ;;
     value_format_name: percent_2
@@ -214,29 +238,31 @@ view: facebook_ads__ad_report {
 
   measure: cpc {
     label: "CPC"
-    description: "Cost per click"
+    description: "Cost per click in Thai Baht - average amount paid for each click"
     type: number
     sql: SAFE_DIVIDE(${total_spend}, ${total_clicks}) ;;
-    value_format_name: usd_2
+    value_format: "฿#,##0.00"
   }
 
   measure: cost_per_conversion {
     label: "Cost per Conversion"
+    description: "Average cost to acquire one conversion in Thai Baht"
     type: number
     sql: SAFE_DIVIDE(${total_spend}, ${total_conversions}) ;;
-    value_format_name: usd_2
+    value_format: "฿#,##0.00"
   }
 
   measure: roas {
     label: "ROAS"
-    description: "Return on ad spend"
+    description: "Return on ad spend - revenue generated per Baht spent (e.g., 3.00 means ฿3 revenue for every ฿1 spent)"
     type: number
     sql: SAFE_DIVIDE(${total_conversions_value}, ${total_spend}) ;;
-    value_format_name: decimal_2
+    value_format: "#,##0.00"
   }
 
   measure: conversion_rate {
     label: "Conversion Rate"
+    description: "Percentage of clicks that resulted in conversions"
     type: number
     sql: SAFE_DIVIDE(${total_conversions}, ${total_clicks}) ;;
     value_format_name: percent_2
@@ -269,11 +295,11 @@ view: facebook_ads__ad_report {
 
   dimension: spend_tier {
     type: tier
-    description: "Spend bucketed into tiers"
+    description: "Spend bucketed into tiers for analysis (฿0, ฿100, ฿500, ฿1K, ฿5K, ฿10K, ฿50K)"
     tiers: [0, 100, 500, 1000, 5000, 10000, 50000]
     sql: ${spend} ;;
     style: interval
-    value_format_name: usd_0
+    value_format: "฿#,##0.00"
   }
 
   dimension: ctr_tier {
