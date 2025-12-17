@@ -12,36 +12,44 @@ view: facebook_ads__account_report {
     # This dimension will be called "Account ID" in Explore.
 
   dimension: account_id {
+    description: "Unique identifier for the Facebook Ads account"
     type: number
     sql: ${TABLE}.account_id ;;
   }
 
   dimension: account_name {
+    description: "Name of the Facebook Ads account"
     type: string
     sql: ${TABLE}.account_name ;;
   }
 
   dimension: account_status {
+    description: "Current status of the Facebook Ads account (e.g., active, disabled)"
     type: string
     sql: ${TABLE}.account_status ;;
   }
 
   dimension: business_country_code {
+    description: "Country code of the business associated with the account"
     type: string
     sql: ${TABLE}.business_country_code ;;
   }
 
   dimension: clicks {
+    description: "Number of clicks on account ads"
     type: number
     sql: ${TABLE}.clicks ;;
   }
 
   dimension: conversions {
+    description: "Number of conversions from account ads"
     type: number
     sql: ${TABLE}.conversions ;;
   }
 
   dimension: conversions_value {
+    description: "Total value of conversions in Thai Baht"
+    value_format: "฿#,##0.00"
     type: number
     sql: ${TABLE}.conversions_value ;;
   }
@@ -55,6 +63,7 @@ view: facebook_ads__account_report {
   }
 
   dimension: currency {
+    description: "Currency used by the account (should be THB for Thai Baht)"
     type: string
     sql: ${TABLE}.currency ;;
   }
@@ -68,59 +77,70 @@ view: facebook_ads__account_report {
   }
 
   dimension: impressions {
+    description: "Number of times account ads were displayed"
     type: number
     sql: ${TABLE}.impressions ;;
   }
 
   dimension: source_relation {
+    description: "Source of the data (for data lineage tracking)"
     type: string
     sql: ${TABLE}.source_relation ;;
   }
 
   dimension: spend {
+    description: "Amount spent on account ads in Thai Baht"
+    value_format: "฿#,##0.00"
     type: number
     sql: ${TABLE}.spend ;;
   }
 
   dimension: timezone_name {
+    description: "Timezone setting for the account"
     type: string
     sql: ${TABLE}.timezone_name ;;
   }
 
   # Measures
   measure: count {
+    description: "Count of unique account records"
     type: count
     drill_fields: [account_name, timezone_name]
   }
 
   measure: total_spend {
+    description: "Total amount spent across all account ads in Thai Baht"
     type: sum
     sql: ${spend} ;;
-    value_format_name: usd_0
+    value_format: "฿#,##0.00"
   }
 
   measure: total_impressions {
+    description: "Total number of times account ads were displayed"
     type: sum
     sql: ${impressions} ;;
-    value_format_name: decimal_0
+    value_format: "#,##0.00"
   }
 
   measure: total_clicks {
+    description: "Total number of clicks on account ads"
     type: sum
     sql: ${clicks} ;;
-    value_format_name: decimal_0
+    value_format: "#,##0.00"
   }
 
   measure: total_conversions {
+    description: "Total number of conversions from account ads"
     type: sum
     sql: ${conversions} ;;
-    value_format_name: decimal_1
+    value_format: "#,##0.00"
   }
 
   measure: total_conversions_value {
+    description: "Total value of all conversions in Thai Baht"
     type: sum
     sql: ${conversions_value} ;;
-    value_format_name: usd_0
+    value_format: "฿#,##0.00"
   }
 
   # Calculated Measures
@@ -129,7 +149,7 @@ view: facebook_ads__account_report {
     description: "Cost per thousand impressions"
     type: number
     sql: SAFE_DIVIDE(${total_spend}, ${total_impressions}) * 1000 ;;
-    value_format_name: decimal_1
+    value_format: "#,##0.00"
   }
 
   measure: ctr {
@@ -145,14 +165,14 @@ view: facebook_ads__account_report {
     description: "Cost per click"
     type: number
     sql: SAFE_DIVIDE(${total_spend}, ${total_clicks}) ;;
-    value_format_name: usd_2
+    value_format: "฿#,##0.00"
   }
 
   measure: cost_per_conversion {
     label: "Cost per Conversion"
     type: number
     sql: SAFE_DIVIDE(${total_spend}, ${total_conversions}) ;;
-    value_format_name: usd_2
+    value_format: "฿#,##0.00"
   }
 
   measure: roas {
